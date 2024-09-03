@@ -136,7 +136,9 @@ export const handleMidtransNotification = async (req: Request, res: Response, ne
                 }, {
                     runValidators: true,
                 });
+                console.log(invoice);
                 if (invoice) {
+                    console.log('p');
                     invoice.payment_method = statusResponse.payment_type;
                     invoice.status_payment = 'completed';
                     await invoice.save();
@@ -151,6 +153,7 @@ export const handleMidtransNotification = async (req: Request, res: Response, ne
                 runValidators: true,
             });
             if (invoice) {
+                console.log('p');
                 invoice.payment_method = statusResponse.payment_type;
                 invoice.status_payment = 'completed';
                 await invoice.save();
@@ -183,7 +186,13 @@ export const handleMidtransNotification = async (req: Request, res: Response, ne
                 invoice.status_payment = 'cancelled';
                 await invoice.save();
             }
-        }
+        } else if (transactionStatus === 'pending') {
+            if (invoice) {
+                invoice.payment_method = statusResponse.payment_type;
+                invoice.status_payment = 'pending';
+                await invoice.save();
+            }
+        };
         res.status(200).send('OK');
     } catch (error) {
         next(error);
