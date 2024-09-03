@@ -5,13 +5,12 @@ import DeliveryAddresses, { DeliveryAddress } from "../deliveryAddress/model";
 import Carts, { Cart } from "../cart/model";
 import Invoices, { Invoice } from "../invoices/model";
 
-let snap = new middtransClient.Snap({
-    isProduction: false,
-    serverKey: `SB-Mid-server-btSBJ7SfqmjcmlrvJYeOOQlT`
-});
-
 export const createOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        const snap = new middtransClient.Snap({
+            isProduction: false,
+            serverKey: process.env.MIDTRANS_SERVER_KEY,
+        });
         const payload = { ...req.body, user: req.user.id };
         const cart: Cart | null = await Carts.findOne({ user: req.user.id }).populate('products.product');
         const deliveryAddress: DeliveryAddress | null = await DeliveryAddresses.findById(payload.deliveryAddress);
@@ -116,6 +115,10 @@ export const getOrder = async (req: Request, res: Response, next: NextFunction) 
 
 export const handleMidtransNotification = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        const snap = new middtransClient.Snap({
+            isProduction: false,
+            serverKey: process.env.MIDTRANS_SERVER_KEY,
+        });
         const notification = req.body;
 
         const statusResponse = await snap.transaction.notification(notification);

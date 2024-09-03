@@ -1,1 +1,1 @@
-import './bin/www.ts';
+import './bin/www';
