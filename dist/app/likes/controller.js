@@ -34,7 +34,6 @@ exports.getLikes = getLikes;
 const Likes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (!req.user) {
-            console.log('unauthorized');
             return res.status(401).json({ message: 'Unauthorized' });
         }
         const user = yield model_1.default.findById(req.user.id);

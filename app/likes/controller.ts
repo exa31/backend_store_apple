@@ -24,7 +24,6 @@ export const getLikes = async (req: Request, res: Response, next: NextFunction) 
 export const Likes = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if (!req.user) {
-            console.log('unauthorized');
             return res.status(401).json({ message: 'Unauthorized' });
         }
         const user: User | null = await Users.findById(req.user.id);

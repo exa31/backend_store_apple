@@ -12,8 +12,7 @@ interface QueryParams {
 }
 
 export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        console.log(process.env.MIDTRANS_SERVER_KEY);
+    try {        
         const { limit = 0, skip = 0, q = '', category = '' } = req.query as QueryParams;
         let filter: any = {};
 

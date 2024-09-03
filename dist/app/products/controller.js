@@ -19,7 +19,6 @@ const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const getProducts = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log(process.env.MIDTRANS_SERVER_KEY);
         const { limit = 0, skip = 0, q = '', category = '' } = req.query;
         let filter = {};
         if (q) {
