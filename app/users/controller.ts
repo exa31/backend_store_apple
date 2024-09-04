@@ -61,7 +61,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         const token = jwt.sign(user, process.env.SECRET_JWT_KEY as string, { expiresIn: '30d', algorithm: 'HS384' });
         try {
             await Users.findByIdAndUpdate({ _id: user._id }, { $push: { token: token } });
-            res.status(200).json({ token });
+            res.status(200).json({ token, name: user.name });
         } catch (error) {
             console.log(error);
             next(error);

@@ -85,7 +85,7 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
         const token = jsonwebtoken_1.default.sign(user, process.env.SECRET_JWT_KEY, { expiresIn: '30d', algorithm: 'HS384' });
         try {
             yield model_1.default.findByIdAndUpdate({ _id: user._id }, { $push: { token: token } });
-            res.status(200).json({ token });
+            res.status(200).json({ token, name: user.name });
         }
         catch (error) {
             console.log(error);
