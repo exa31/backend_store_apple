@@ -10,7 +10,7 @@ import Carts, { Cart } from "../cart/model";
 export const localStrategy = async (email: string, password: string, done: any) => {
     const inputPw: string = password;
     try {
-        const user: User | null = await Users.findOne({ email: email }).select('-token -createdAt -updatedAt -address -phone_number -__v +password +name')
+        const user: User | null = await Users.findOne({ email: email }).select('-token -createdAt -updatedAt -address -phone_number -__v').select('+password +name');
         if (!user) {
             return done(null, false, { message: 'Invalid email or password' });
         }
@@ -52,6 +52,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 export const login = async (req: Request, res: Response, next: NextFunction) => {
     passport.authenticate('local', async (err: any, user: User) => {
         if (err) {
+            console.log(err);
             return next(err);
         }
         if (!user) {
@@ -62,6 +63,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
             await Users.findByIdAndUpdate({ _id: user._id }, { $push: { token: token } });
             res.status(200).json({ token });
         } catch (error) {
+            console.log(error);
             next(error);
         }
     })(req, res, next);

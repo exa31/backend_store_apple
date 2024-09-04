@@ -19,7 +19,7 @@ const getCart = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         if (!req.user) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
-        const cart = yield model_1.default.findOne({ user: req.user.id }).populate('products.product');
+        const cart = yield model_1.default.findOne({ user: req.user._id }).populate('products.product');
         if (cart) {
             return res.status(200).json(cart);
         }
@@ -34,7 +34,7 @@ exports.getCart = getCart;
 const addProductToCart = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { productId, quantity } = req.body;
-        const cart = yield model_1.default.findOne({ user: req.user.id });
+        const cart = yield model_1.default.findOne({ user: req.user._id });
         if (cart) {
             const exisProduct = cart.products.find(product => product.product.toString() === productId);
             if (exisProduct) {
@@ -59,12 +59,12 @@ exports.addProductToCart = addProductToCart;
 const reduceProductCart = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { productId } = req.body;
-        const cart = yield model_1.default.findOne({ user: req.user.id });
+        const cart = yield model_1.default.findOne({ user: req.user._id });
         if (cart) {
             const exisProduct = cart.products.find(product => product.product.toString() === productId);
             if (exisProduct) {
                 if (exisProduct.quantity === 1) {
-                    const cart = yield model_1.default.findOneAndUpdate({ user: req.user.id }, { $pull: { products: { product: productId } } }, { new: true });
+                    const cart = yield model_1.default.findOneAndUpdate({ user: req.user._id }, { $pull: { products: { product: productId } } }, { new: true });
                     return res.status(200).json({ message: 'Product removed from cart', cart });
                 }
                 else {
@@ -85,7 +85,7 @@ exports.reduceProductCart = reduceProductCart;
 const removeProductFromCart = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { productId } = req.body;
-        const cart = yield model_1.default.findOneAndUpdate({ user: req.user.id }, { $pull: { products: { product: productId } } }, { new: true });
+        const cart = yield model_1.default.findOneAndUpdate({ user: req.user._id }, { $pull: { products: { product: productId } } }, { new: true });
         if (cart) {
             return res.status(200).json({ message: 'Product removed from cart', cart });
         }

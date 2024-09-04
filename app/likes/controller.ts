@@ -11,7 +11,7 @@ export const getLikes = async (req: Request, res: Response, next: NextFunction) 
         if (!req.user) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
-        const user: User | null = await Users.findById(req.user.id).populate('likes');
+        const user: User | null = await Users.findById(req.user._id).populate('likes');
         if (user) {
             return res.status(200).json(user.likes);
         }
@@ -26,7 +26,7 @@ export const Likes = async (req: Request, res: Response, next: NextFunction) => 
         if (!req.user) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
-        const user: User | null = await Users.findById(req.user.id);
+        const user: User | null = await Users.findById(req.user._id);
         if (user) {
             const product: Product | null = await Products.findById(req.body.productId);
             const isLiked = user.likes!.find(like => like.toString() === req.body.productId);

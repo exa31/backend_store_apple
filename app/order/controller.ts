@@ -11,8 +11,8 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
             isProduction: false,
             serverKey: process.env.MIDTRANS_SERVER_KEY,
         });
-        const payload = { ...req.body, user: req.user.id };
-        const cart: Cart | null = await Carts.findOne({ user: req.user.id }).populate('products.product');
+        const payload = { ...req.body, user: req.user._id };
+        const cart: Cart | null = await Carts.findOne({ user: req.user._id }).populate('products.product');
         const deliveryAddress: DeliveryAddress | null = await DeliveryAddresses.findById(payload.deliveryAddress);
         const order: Order = new Orders({
             ...payload,
@@ -77,7 +77,7 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
             .then(async (transaction: any) => {
                 await Carts.findOneAndUpdate(
                     {
-                        user: req.user.id,
+                        user: req.user._id,
                     },
                     {
                         $set: {
@@ -97,7 +97,7 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
 
 export const getOrders = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const orders: Order[] = await Orders.find({ user: req.user.id }).sort({ createdAt: -1 });
+        const orders: Order[] = await Orders.find({ user: req.user._id }).sort({ createdAt: -1 });
         res.status(200).json(orders);
     } catch (error) {
         next(error);
@@ -138,7 +138,6 @@ export const handleMidtransNotification = async (req: Request, res: Response, ne
                 });
                 console.log(invoice);
                 if (invoice) {
-                    console.log('p');
                     invoice.payment_method = statusResponse.payment_type;
                     invoice.status_payment = 'completed';
                     await invoice.save();
@@ -153,7 +152,6 @@ export const handleMidtransNotification = async (req: Request, res: Response, ne
                 runValidators: true,
             });
             if (invoice) {
-                console.log('p');
                 invoice.payment_method = statusResponse.payment_type;
                 invoice.status_payment = 'completed';
                 await invoice.save();

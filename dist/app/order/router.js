@@ -6,5 +6,5 @@ const router = (0, express_1.Router)();
 router.post('/orders', controller_1.createOrder);
 router.get('/orders', controller_1.getOrders);
 router.get('/orders/:id', controller_1.getOrder);
-router.post('/order/notification', controller_1.handleMidtransNotification);
+router.post('/orders/notification', controller_1.handleMidtransNotification);
 exports.default = router;

@@ -24,17 +24,19 @@ const createOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             isProduction: false,
             serverKey: process.env.MIDTRANS_SERVER_KEY,
         });
-        const payload = Object.assign(Object.assign({}, req.body), { user: req.user.id });
-        const cart = yield model_3.default.findOne({ user: req.user.id }).populate('products.product');
+        const payload = Object.assign(Object.assign({}, req.body), { user: req.user._id });
+        const cart = yield model_3.default.findOne({ user: req.user._id }).populate('products.product');
         const deliveryAddress = yield model_2.default.findById(payload.deliveryAddress);
-        const order = new model_1.default(Object.assign(Object.assign({}, payload), { delivery_address: {
+        const order = new model_1.default(Object.assign(Object.assign({}, payload), {
+            delivery_address: {
                 provinsi: deliveryAddress === null || deliveryAddress === void 0 ? void 0 : deliveryAddress.provinsi,
                 kabupaten: deliveryAddress === null || deliveryAddress === void 0 ? void 0 : deliveryAddress.kabupaten,
                 name: deliveryAddress === null || deliveryAddress === void 0 ? void 0 : deliveryAddress.name,
                 kecamatan: deliveryAddress === null || deliveryAddress === void 0 ? void 0 : deliveryAddress.kecamatan,
                 kelurahan: deliveryAddress === null || deliveryAddress === void 0 ? void 0 : deliveryAddress.kelurahan,
                 detail: deliveryAddress === null || deliveryAddress === void 0 ? void 0 : deliveryAddress.detail
-            } }));
+            }
+        }));
         const orderItems = cart.products.map((item) => {
             return {
                 id: item.product._id,
@@ -85,18 +87,18 @@ const createOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         };
         return snap.createTransaction(parameter)
             .then((transaction) => __awaiter(void 0, void 0, void 0, function* () {
-            yield model_3.default.findOneAndUpdate({
-                user: req.user.id,
-            }, {
-                $set: {
-                    products: []
-                }
-            });
-            order.token = transaction.token;
-            yield order.save();
-            // transaction token                
-            res.status(200).json(transaction.token);
-        }));
+                yield model_3.default.findOneAndUpdate({
+                    user: req.user._id,
+                }, {
+                    $set: {
+                        products: []
+                    }
+                });
+                order.token = transaction.token;
+                yield order.save();
+                // transaction token                
+                res.status(200).json(transaction.token);
+            }));
     }
     catch (error) {
         console.log(error);
@@ -106,7 +108,7 @@ const createOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
 exports.createOrder = createOrder;
 const getOrders = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const orders = yield model_1.default.find({ user: req.user.id }).sort({ createdAt: -1 });
+        const orders = yield model_1.default.find({ user: req.user._id }).sort({ createdAt: -1 });
         res.status(200).json(orders);
     }
     catch (error) {
@@ -145,6 +147,7 @@ const handleMidtransNotification = (req, res, next) => __awaiter(void 0, void 0,
                 }, {
                     runValidators: true,
                 });
+                console.log(invoice);
                 if (invoice) {
                     invoice.payment_method = statusResponse.payment_type;
                     invoice.status_payment = 'completed';
@@ -195,6 +198,14 @@ const handleMidtransNotification = (req, res, next) => __awaiter(void 0, void 0,
                 yield invoice.save();
             }
         }
+        else if (transactionStatus === 'pending') {
+            if (invoice) {
+                invoice.payment_method = statusResponse.payment_type;
+                invoice.status_payment = 'pending';
+                yield invoice.save();
+            }
+        }
+        ;
         res.status(200).send('OK');
     }
     catch (error) {

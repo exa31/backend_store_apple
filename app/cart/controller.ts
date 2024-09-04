@@ -11,7 +11,7 @@ export const getCart = async (req: Request, res: Response, next: NextFunction) =
         if (!req.user) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
-        const cart: Cart | null = await Carts.findOne({ user: req.user.id }).populate('products.product');
+        const cart: Cart | null = await Carts.findOne({ user: req.user._id }).populate('products.product');
         if (cart) {
             return res.status(200).json(cart);
         }
@@ -25,7 +25,7 @@ export const getCart = async (req: Request, res: Response, next: NextFunction) =
 export const addProductToCart = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { productId, quantity } = req.body as ReqUser;
-        const cart: Cart | null = await Carts.findOne({ user: req.user.id });
+        const cart: Cart | null = await Carts.findOne({ user: req.user._id });
         if (cart) {
             const exisProduct = cart.products.find(product => product.product.toString() === productId);
             if (exisProduct) {
@@ -48,12 +48,12 @@ export const addProductToCart = async (req: Request, res: Response, next: NextFu
 export const reduceProductCart = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { productId } = req.body as ReqUser;
-        const cart: Cart | null = await Carts.findOne({ user: req.user.id });
+        const cart: Cart | null = await Carts.findOne({ user: req.user._id });
         if (cart) {
             const exisProduct = cart.products.find(product => product.product.toString() === productId);
             if (exisProduct) {
                 if (exisProduct.quantity === 1) {
-                    const cart: Cart | null = await Carts.findOneAndUpdate({ user: req.user.id }, { $pull: { products: { product: productId } } }, { new: true });
+                    const cart: Cart | null = await Carts.findOneAndUpdate({ user: req.user._id }, { $pull: { products: { product: productId } } }, { new: true });
                     return res.status(200).json({ message: 'Product removed from cart', cart });
                 } else {
                     exisProduct.quantity -= 1;
@@ -72,7 +72,7 @@ export const reduceProductCart = async (req: Request, res: Response, next: NextF
 export const removeProductFromCart = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { productId } = req.body as ReqUser
-        const cart: Cart | null = await Carts.findOneAndUpdate({ user: req.user.id }, { $pull: { products: { product: productId } } }, { new: true });
+        const cart: Cart | null = await Carts.findOneAndUpdate({ user: req.user._id }, { $pull: { products: { product: productId } } }, { new: true });
         if (cart) {
             return res.status(200).json({ message: 'Product removed from cart', cart });
         }

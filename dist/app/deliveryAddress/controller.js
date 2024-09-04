@@ -17,7 +17,7 @@ const middleware_1 = require("../../middleware");
 const model_1 = __importDefault(require("./model"));
 const getDeliveryAddresses = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const deliveryAddresses = yield model_1.default.find({ user: req.user.id });
+        const deliveryAddresses = yield model_1.default.find({ user: req.user._id });
         if (deliveryAddresses.length > 0) {
             (0, middleware_1.checkIsUserData)(deliveryAddresses[0].user.toString());
             return res.status(200).json(deliveryAddresses);
@@ -32,7 +32,7 @@ const getDeliveryAddresses = (req, res, next) => __awaiter(void 0, void 0, void 
 exports.getDeliveryAddresses = getDeliveryAddresses;
 const getDeliveryAddress = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const deliveryAddress = yield model_1.default.findOne({ _id: req.params.id, user: req.user.id });
+        const deliveryAddress = yield model_1.default.findOne({ _id: req.params.id, user: req.user._id });
         if (deliveryAddress) {
             (0, middleware_1.checkIsUserData)(deliveryAddress === null || deliveryAddress === void 0 ? void 0 : deliveryAddress.user.toString());
             return res.status(200).json(deliveryAddress);
@@ -47,7 +47,7 @@ const getDeliveryAddress = (req, res, next) => __awaiter(void 0, void 0, void 0,
 exports.getDeliveryAddress = getDeliveryAddress;
 const createDeliveryAddress = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const payload = Object.assign(Object.assign({}, req.body), { user: req.user.id });
+        const payload = Object.assign(Object.assign({}, req.body), { user: req.user._id });
         const deliveryAddress = yield model_1.default.create(payload);
         return res.status(201).json(deliveryAddress);
     }
@@ -59,7 +59,7 @@ const createDeliveryAddress = (req, res, next) => __awaiter(void 0, void 0, void
 exports.createDeliveryAddress = createDeliveryAddress;
 const updateDeliveryAddress = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const deliveryAddress = yield model_1.default.findOne({ _id: req.params.id, user: req.user.id });
+        const deliveryAddress = yield model_1.default.findOne({ _id: req.params.id, user: req.user._id });
         if (deliveryAddress) {
             (0, middleware_1.checkIsUserData)(deliveryAddress === null || deliveryAddress === void 0 ? void 0 : deliveryAddress.user.toString());
             yield model_1.default.updateOne({ _id: req.params.id }, { $set: req.body });
@@ -75,7 +75,7 @@ const updateDeliveryAddress = (req, res, next) => __awaiter(void 0, void 0, void
 exports.updateDeliveryAddress = updateDeliveryAddress;
 const deleteDeliveryAddress = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const deliveryAddress = yield model_1.default.findOne({ _id: req.params.id, user: req.user.id });
+        const deliveryAddress = yield model_1.default.findOne({ _id: req.params.id, user: req.user._id });
         if (deliveryAddress) {
             (0, middleware_1.checkIsUserData)(deliveryAddress === null || deliveryAddress === void 0 ? void 0 : deliveryAddress.user.toString());
             yield model_1.default.deleteOne({ _id: req.params.id });

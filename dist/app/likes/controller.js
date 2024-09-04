@@ -20,7 +20,7 @@ const getLikes = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         if (!req.user) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
-        const user = yield model_1.default.findById(req.user.id).populate('likes');
+        const user = yield model_1.default.findById(req.user._id).populate('likes');
         if (user) {
             return res.status(200).json(user.likes);
         }
@@ -36,7 +36,7 @@ const Likes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
         if (!req.user) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
-        const user = yield model_1.default.findById(req.user.id);
+        const user = yield model_1.default.findById(req.user._id);
         if (user) {
             const product = yield model_2.default.findById(req.body.productId);
             const isLiked = user.likes.find(like => like.toString() === req.body.productId);

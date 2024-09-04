@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from "express";
 
 export const getDeliveryAddresses = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const deliveryAddresses: DeliveryAddress[] = await DeliveryAddresses.find({ user: req.user.id });
+        const deliveryAddresses: DeliveryAddress[] = await DeliveryAddresses.find({ user: req.user._id });
         if (deliveryAddresses.length > 0) {
             checkIsUserData(deliveryAddresses[0].user.toString()!);
             return res.status(200).json(deliveryAddresses);
@@ -18,7 +18,7 @@ export const getDeliveryAddresses = async (req: Request, res: Response, next: Ne
 
 export const getDeliveryAddress = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const deliveryAddress: DeliveryAddress | null = await DeliveryAddresses.findOne({ _id: req.params.id, user: req.user.id });
+        const deliveryAddress: DeliveryAddress | null = await DeliveryAddresses.findOne({ _id: req.params.id, user: req.user._id });
         if (deliveryAddress) {
             checkIsUserData(deliveryAddress?.user.toString()!);
             return res.status(200).json(deliveryAddress);
@@ -32,7 +32,7 @@ export const getDeliveryAddress = async (req: Request, res: Response, next: Next
 
 export const createDeliveryAddress = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const payload = { ...req.body, user: req.user.id };
+        const payload = { ...req.body, user: req.user._id };
         const deliveryAddress: DeliveryAddress = await DeliveryAddresses.create(payload);
         return res.status(201).json(deliveryAddress);
     } catch (error) {
@@ -43,7 +43,7 @@ export const createDeliveryAddress = async (req: Request, res: Response, next: N
 
 export const updateDeliveryAddress = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const deliveryAddress: DeliveryAddress | null = await DeliveryAddresses.findOne({ _id: req.params.id, user: req.user.id });
+        const deliveryAddress: DeliveryAddress | null = await DeliveryAddresses.findOne({ _id: req.params.id, user: req.user._id });
         if (deliveryAddress) {
             checkIsUserData(deliveryAddress?.user.toString()!)
             await DeliveryAddresses.updateOne({ _id: req.params.id }, { $set: req.body });
@@ -58,7 +58,7 @@ export const updateDeliveryAddress = async (req: Request, res: Response, next: N
 
 export const deleteDeliveryAddress = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const deliveryAddress: DeliveryAddress | null = await DeliveryAddresses.findOne({ _id: req.params.id, user: req.user.id });
+        const deliveryAddress: DeliveryAddress | null = await DeliveryAddresses.findOne({ _id: req.params.id, user: req.user._id });
         if (deliveryAddress) {
             checkIsUserData(deliveryAddress?.user.toString()!)
             await DeliveryAddresses.deleteOne({ _id: req.params.id });

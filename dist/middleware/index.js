@@ -57,7 +57,7 @@ exports.checkRole = checkRole;
 const checkIsUserData = (_id) => {
     return (req, res, next) => {
         if (req.user) {
-            if (req.user.id === _id) {
+            if (req.user._id === _id) {
                 return next();
             }
         }

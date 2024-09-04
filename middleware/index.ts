@@ -19,8 +19,7 @@ export const decodeToken = () => {
                     if (err) {
                         return next()
                     }
-                    req.user = decoded as { id: string; name: string; email: string; role: string; };
-
+                    req.user = decoded as { _id: string; name: string; email: string; role: string; };
                     return next();
                 });
             }
@@ -46,7 +45,7 @@ export const checkRole = (role: string) => {
 export const checkIsUserData = (_id: string) => {
     return (req: Request, res: Response, next: NextFunction) => {
         if (req.user) {
-            if (req.user.id === _id) {
+            if (req.user._id === _id) {
                 return next();
             }
         }
