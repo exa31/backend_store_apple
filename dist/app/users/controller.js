@@ -33,7 +33,7 @@ const model_2 = __importDefault(require("../cart/model"));
 const localStrategy = (email, password, done) => __awaiter(void 0, void 0, void 0, function* () {
     const inputPw = password;
     try {
-        const user = yield model_1.default.findOne({ email: email }).select('-token -createdAt -updatedAt -address -phone_number -__v +password +name');
+        const user = yield model_1.default.findOne({ email: email }).select('-token -createdAt -updatedAt -address -phone_number -__v').select('+password +name');
         if (!user) {
             return done(null, false, { message: 'Invalid email or password' });
         }
@@ -76,6 +76,7 @@ exports.createUser = createUser;
 const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     passport_1.default.authenticate('local', (err, user) => __awaiter(void 0, void 0, void 0, function* () {
         if (err) {
+            console.log(err);
             return next(err);
         }
         if (!user) {
@@ -87,6 +88,7 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
             res.status(200).json({ token });
         }
         catch (error) {
+            console.log(error);
             next(error);
         }
     }))(req, res, next);
