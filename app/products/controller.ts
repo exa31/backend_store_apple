@@ -8,12 +8,13 @@ interface QueryParams {
     limit?: number;
     skip?: number;
     q?: string;
+    id?: string;
     category?: string;
 }
 
 export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
-    try {        
-        const { limit = 0, skip = 0, q = '', category = '' } = req.query as QueryParams;
+    try {
+        const { limit = 0, skip = 0, q = '', category = '', id } = req.query as QueryParams;
         let filter: any = {};
 
         if (q) {
@@ -31,6 +32,13 @@ export const getProducts = async (req: Request, res: Response, next: NextFunctio
                     category: categoryFilter._id
                 };
             }
+        }
+
+        if (id) {
+            filter = {
+                ...filter,
+                _id: { $ne: id }
+            };
         }
 
         const count: number = await Products.countDocuments(filter);

@@ -19,7 +19,7 @@ const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const getProducts = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { limit = 0, skip = 0, q = '', category = '' } = req.query;
+        const { limit = 0, skip = 0, q = '', category = '', id } = req.query;
         let filter = {};
         if (q) {
             filter = Object.assign(Object.assign({}, filter), { name: { $regex: new RegExp(q, 'i') } });
@@ -29,6 +29,9 @@ const getProducts = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             if (categoryFilter) {
                 filter = Object.assign(Object.assign({}, filter), { category: categoryFilter._id });
             }
+        }
+        if (id) {
+            filter = Object.assign(Object.assign({}, filter), { _id: { $ne: id } });
         }
         const count = yield model_2.default.countDocuments(filter);
         const page = count === 0 ? 1 : Math.ceil(count / 12);
