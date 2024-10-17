@@ -76,7 +76,7 @@ export const loginGoogle = async (req: Request, res: Response, next: NextFunctio
         if (!user) {
             res.status(401).json({ message: 'Unauthorized' });
         } else {
-            const payload = { id: user._id, email: user.email, name: user.name, role: user.role };
+            const payload = { _id: user._id, email: user.email, name: user.name, role: user.role };
             const token = jwt.sign(payload, process.env.SECRET_JWT_KEY as string, { expiresIn: '30d', algorithm: 'HS384' });
             await Users.findByIdAndUpdate({ _id: user._id }, { $push: { token: token } });
             res.status(200).json({ token, name: user.name });

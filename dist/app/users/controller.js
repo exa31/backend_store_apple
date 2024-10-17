@@ -102,7 +102,7 @@ const loginGoogle = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             res.status(401).json({ message: 'Unauthorized' });
         }
         else {
-            const payload = { id: user._id, email: user.email, name: user.name, role: user.role };
+            const payload = { _id: user._id, email: user.email, name: user.name, role: user.role };
             const token = jsonwebtoken_1.default.sign(payload, process.env.SECRET_JWT_KEY, { expiresIn: '30d', algorithm: 'HS384' });
             yield model_1.default.findByIdAndUpdate({ _id: user._id }, { $push: { token: token } });
             res.status(200).json({ token, name: user.name });
