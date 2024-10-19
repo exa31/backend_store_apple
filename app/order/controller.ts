@@ -87,7 +87,7 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
                 order.token = transaction.token;
                 await order.save();
                 // transaction token                
-                res.status(200).json(transaction.token);
+                res.status(200).json({ url: transaction.redirect_url, token: transaction.token, });
             })
     } catch (error) {
         console.log(error);
