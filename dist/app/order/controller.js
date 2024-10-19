@@ -37,7 +37,7 @@ const createOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             } }));
         const orderItems = cart.products.map((item) => {
             return {
-                id: item.product._id,
+                _id: item.product._id,
                 quantity: item.quantity,
                 price: item.product.price,
                 name: item.product.name
