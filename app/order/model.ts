@@ -3,7 +3,7 @@ import { DeliveryAddress } from "../deliveryAddress/model";
 import Invoices, { Invoice } from "../invoices/model";
 
 export interface OrderItem {
-    id: Types.ObjectId;
+    _id: Types.ObjectId;
     quantity: number;
     price: number;
     name: string;
@@ -34,7 +34,7 @@ const orderSchema = new Schema<Order>({
     token: { type: String },
     order_items: [
         {
-            id: { type: Schema.Types.ObjectId, ref: 'Product' },
+            _id: { type: Schema.Types.ObjectId, ref: 'Product' },
             quantity: { type: Number },
             price: { type: Number },
             name: { type: String }

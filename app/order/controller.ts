@@ -27,7 +27,7 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
         });
         const orderItems: OrderItem[] = cart!.products.map((item: any) => {
             return {
-                id: item.product._id,
+                _id: item.product._id,
                 quantity: item.quantity,
                 price: item.product.price,
                 name: item.product.name
