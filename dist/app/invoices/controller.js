@@ -17,7 +17,10 @@ const model_1 = __importDefault(require("./model"));
 const middleware_1 = require("../../middleware");
 const getInvoice = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const invoices = yield model_1.default.findOne({ order: req.params.orderId }).populate('user').populate('order');
+        const invoices = yield model_1.default.findOne({ order: req.params.orderId }).populate({
+            path: 'user',
+            select: '-password -token -createdAt -updatedAt -role -cart -likes -_id -__v'
+        }).populate('order');
         (0, middleware_1.checkIsUserData)(invoices.user._id.toString());
         res.status(200).json(invoices);
     }
