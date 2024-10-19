@@ -49,7 +49,6 @@ orderSchema.pre('save', function (next) {
             const invoice = new model_1.default({
                 user: this.user,
                 delivery_address: this.delivery_address,
-                quantity: this.quantity,
                 total: this.total,
                 tax: this.tax,
                 payment_method: this.payment_method,

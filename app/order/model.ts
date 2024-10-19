@@ -59,7 +59,6 @@ orderSchema.pre('save', async function (next) {
         const invoice: Invoice = new Invoices({
             user: this.user,
             delivery_address: this.delivery_address,
-            quantity: this.quantity,
             total: this.total,
             tax: this.tax,
             payment_method: this.payment_method,
