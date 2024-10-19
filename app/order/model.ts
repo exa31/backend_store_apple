@@ -34,7 +34,7 @@ const orderSchema = new Schema<Order>({
     token: { type: String },
     order_items: [
         {
-            product: { type: Schema.Types.ObjectId, ref: 'Product' },
+            id: { type: Schema.Types.ObjectId, ref: 'Product' },
             quantity: { type: Number },
             price: { type: Number },
             name: { type: String }
