@@ -19,7 +19,7 @@ const getInvoice = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     try {
         const invoices = yield model_1.default.findOne({ order: req.params.orderId }).populate({
             path: 'user',
-            select: '-password -token -createdAt -updatedAt -role -cart -likes -_id -__v'
+            select: '-password -token -createdAt -updatedAt -role -cart -likes  -__v'
         }).populate('order');
         (0, middleware_1.checkIsUserData)(invoices.user._id.toString());
         res.status(200).json(invoices);
