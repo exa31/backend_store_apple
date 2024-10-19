@@ -30,6 +30,7 @@ const orderSchema = new mongoose_1.Schema({
             name: { type: String }
         }
     ],
+    url_redirect: { type: String },
     delivery_address: {
         provinsi: { type: String, required: true },
         kabupaten: { type: String, required: true },

@@ -14,6 +14,7 @@ export interface Order extends Document {
     order_items: OrderItem[];
     delivery_address: DeliveryAddress;
     quantity: number;
+    url_redirect: string;
     total: number;
     tax: number;
     token: string;
@@ -39,6 +40,7 @@ const orderSchema = new Schema<Order>({
             name: { type: String }
         }
     ],
+    url_redirect: { type: String },
     delivery_address: {
         provinsi: { type: String, required: true },
         kabupaten: { type: String, required: true },

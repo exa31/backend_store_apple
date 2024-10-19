@@ -93,6 +93,7 @@ const createOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
                 }
             });
             order.token = transaction.token;
+            order.url_redirect = transaction.redirect_url;
             yield order.save();
             // transaction token                
             res.status(200).json({ url: transaction.redirect_url, token: transaction.token, });
