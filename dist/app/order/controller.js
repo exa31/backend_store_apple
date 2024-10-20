@@ -204,7 +204,10 @@ const handleMidtransNotification = (req, res, next) => __awaiter(void 0, void 0,
                 yield invoice.save();
             }
         }
-        ;
+        else {
+            invoice.status_payment = 'cancelled';
+            yield invoice.save();
+        }
         res.status(200).send('OK');
     }
     catch (error) {

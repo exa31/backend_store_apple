@@ -191,7 +191,10 @@ export const handleMidtransNotification = async (req: Request, res: Response, ne
                 invoice.status_payment = 'pending';
                 await invoice.save();
             }
-        };
+        } else {
+            invoice!.status_payment = 'cancelled';
+            await invoice!.save();
+        }
         res.status(200).send('OK');
     } catch (error) {
         next(error);
