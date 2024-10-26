@@ -13,7 +13,6 @@ export interface Order extends Document {
     user: Types.ObjectId;
     order_items: OrderItem[];
     delivery_address: DeliveryAddress;
-    quantity: number;
     url_redirect: string;
     total: number;
     tax: number;

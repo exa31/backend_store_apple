@@ -12,7 +12,7 @@ import { decodeToken } from './middleware/index';
 import cors from 'cors'
 import routerCarts from './app/cart/router';
 import routerLikes from './app/likes/router';
-import routerOrder from './app/order/router';
+import routerOrder from './app/orders/router';
 import routerInvoices from './app/invoices/router';
 import routerDeliveryAddresser from './app/deliveryAddress/router';
 

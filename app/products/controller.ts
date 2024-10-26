@@ -80,7 +80,7 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
             }
         }
         let image_thumbnail: string = '';
-        let image_detail: string[] = [];
+        let image_details: string[] = [];
         if (req.files && typeof req.files === 'object') {
             const files = req.files as { [fieldname: string]: Express.Multer.File[] };
             if (files.image_thumbnail && files.image_thumbnail.length > 0) {
@@ -101,8 +101,8 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
                     res.status(500).json({ message: 'Failed to upload image' });
                 });
             }
-            if (files.image_detail && files.image_detail.length > 0) {
-                files.image_detail.forEach((file) => {
+            if (files.image_details && files.image_details.length > 0) {
+                files.image_details.forEach((file) => {
                     const tmp_path = file.path;
                     const originalExt = file.originalname.split('.').pop();
                     const filename = file.filename + '.' + originalExt;
@@ -111,7 +111,7 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
                     const dest = fs.createWriteStream(target_path);
                     src.pipe(dest);
 
-                    image_detail.push(`/${filename}`);
+                    image_details.push(`/${filename}`);
 
                     src.on('error', () => {
                         if (fs.existsSync(target_path)) {
@@ -126,7 +126,7 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
         const product: Product = new Products({
             ...req.body,
             image_thumbnail,
-            image_details: image_detail,
+            image_details,
         });
         await product.save();
         res.status(201).json(product);
@@ -138,6 +138,7 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
 export const updateProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const product: Product | null = await Products.findById(req.params.id);
+        console.log('product');
         if (product) {
             const payload = req.body as Product;
             if (payload.category) {
@@ -176,7 +177,7 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
                         res.status(500).json({ message: 'Failed to updated image' });
                     });
                 }
-                // saat update image_detail harus berikan juga req.body.image_details[] yang lama                                
+                // saat update image_details harus berikan juga req.body.image_details[] yang lama                                
 
                 if (req.body.image_details) {
                     if (req.body.image_details.length > 0) {
@@ -198,8 +199,8 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
                         fs.unlinkSync(path.resolve(__dirname, '../../' + `public/images${image_detail}`));
                     });
                 }
-                if (files.image_detail && files.image_detail.length > 0) {
-                    files.image_detail.forEach((file) => {
+                if (files.image_details && files.image_details.length > 0) {
+                    files.image_details.forEach((file) => {
                         const tmp_path = file.path;
                         const originalExt = file.originalname.split('.').pop();
                         const filename = file.filename + '.' + originalExt;

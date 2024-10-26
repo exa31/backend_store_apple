@@ -105,6 +105,40 @@ export const getOrders = async (req: Request, res: Response, next: NextFunction)
     }
 };
 
+export const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        if (req.user.role !== 'admin') {
+            res.status(401).json({ message: 'Unauthorized' });
+            return;
+        }
+        const order: Order | null = await Orders.findById(req.params.id);
+        const { status_delivery } = req.body;
+        if (order) {
+            await Orders.findByIdAndUpdate(req.params.id, status_delivery, { runValidators: true });
+            res.status(200).json({ message: 'Order updated' });
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const getAllOrders = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        if (req.user.role === 'admin') {
+            const { skip, limit } = req.query;
+            const orders: Order[] = await Orders.find({ payment_method: { $ne: '', $exists: true } }).sort({ createdAt: -1 }).skip(parseInt(skip as string)).limit(parseInt(limit as string)).skip(parseInt(skip as string));
+            const count = await Orders.countDocuments({ payment_method: { $ne: '', $exists: true } });
+            const page: number = count === 0 ? 1 : Math.ceil(count / 12);
+            res.status(200).json({ orders, count, page });
+            return;
+        } else {
+            res.status(401).json({ message: 'Unauthorized' });
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
 export const getOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const order: Order | null = await Orders.findById(req.params.id);
@@ -170,7 +204,6 @@ export const handleMidtransNotification = async (req: Request, res: Response, ne
                 invoice.status_payment = 'cancelled';
                 await invoice.save();
             }
-
         } else if (transactionStatus === 'cancel' || transactionStatus === 'expire') {
             // Transaksi dibatalkan
             await Orders.findByIdAndUpdate(orderId, {
@@ -186,6 +219,13 @@ export const handleMidtransNotification = async (req: Request, res: Response, ne
                 await invoice.save();
             }
         } else if (transactionStatus === 'pending') {
+            await Orders.findByIdAndUpdate(orderId, {
+                status_payment: 'pending',
+                payment_method: statusResponse.payment_type,
+            }, {
+                runValidators: true
+            });
+            // Transaksi pending            
             if (invoice) {
                 invoice.payment_method = statusResponse.payment_type;
                 invoice.status_payment = 'pending';
@@ -193,6 +233,8 @@ export const handleMidtransNotification = async (req: Request, res: Response, ne
             }
         } else {
             invoice!.status_payment = 'cancelled';
+            invoice!.status_delivery = 'cancelled';
+            invoice!.payment_method = 'cancelled';
             await invoice!.save();
         }
         res.status(200).send('OK');

@@ -18,13 +18,13 @@ router.post('/products',
     checkRole('admin') as RequestHandler,
     upload.fields([
         { name: 'image_thumbnail' },
-        { name: 'image_detail' }]),
+        { name: 'image_details' }]),
     createProduct);
 router.put('/products/:id',
     checkRole('admin') as RequestHandler,
     upload.fields([
         { name: 'image_thumbnail' },
-        { name: 'image_detail' }]),
+        { name: 'image_details' }]),
     updateProduct);
 router.delete('/products/:id',
     checkRole('admin') as RequestHandler,

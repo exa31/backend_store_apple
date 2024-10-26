@@ -14,11 +14,11 @@ router.get('/products/:id', controller_1.getProduct);
 router.get('/products', controller_1.getProducts);
 router.post('/products', (0, middleware_1.checkRole)('admin'), upload.fields([
     { name: 'image_thumbnail' },
-    { name: 'image_detail' }
+    { name: 'image_details' }
 ]), controller_1.createProduct);
 router.put('/products/:id', (0, middleware_1.checkRole)('admin'), upload.fields([
     { name: 'image_thumbnail' },
-    { name: 'image_detail' }
+    { name: 'image_details' }
 ]), controller_1.updateProduct);
 router.delete('/products/:id', (0, middleware_1.checkRole)('admin'), controller_1.deleteProduct);
 exports.default = router;

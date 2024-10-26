@@ -75,7 +75,7 @@ const createProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, func
             }
         }
         let image_thumbnail = '';
-        let image_detail = [];
+        let image_details = [];
         if (req.files && typeof req.files === 'object') {
             const files = req.files;
             if (files.image_thumbnail && files.image_thumbnail.length > 0) {
@@ -96,8 +96,8 @@ const createProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, func
                     res.status(500).json({ message: 'Failed to upload image' });
                 });
             }
-            if (files.image_detail && files.image_detail.length > 0) {
-                files.image_detail.forEach((file) => {
+            if (files.image_details && files.image_details.length > 0) {
+                files.image_details.forEach((file) => {
                     const tmp_path = file.path;
                     const originalExt = file.originalname.split('.').pop();
                     const filename = file.filename + '.' + originalExt;
@@ -105,7 +105,7 @@ const createProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, func
                     const src = fs_1.default.createReadStream(tmp_path);
                     const dest = fs_1.default.createWriteStream(target_path);
                     src.pipe(dest);
-                    image_detail.push(`/${filename}`);
+                    image_details.push(`/${filename}`);
                     src.on('error', () => {
                         if (fs_1.default.existsSync(target_path)) {
                             fs_1.default.unlinkSync(target_path);
@@ -116,7 +116,8 @@ const createProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, func
                 });
             }
         }
-        const product = new model_2.default(Object.assign(Object.assign({}, req.body), { image_thumbnail, image_details: image_detail }));
+        const product = new model_2.default(Object.assign(Object.assign({}, req.body), { image_thumbnail,
+            image_details }));
         yield product.save();
         res.status(201).json(product);
     }
@@ -128,6 +129,7 @@ exports.createProduct = createProduct;
 const updateProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const product = yield model_2.default.findById(req.params.id);
+        console.log('product');
         if (product) {
             const payload = req.body;
             if (payload.category) {
@@ -167,7 +169,7 @@ const updateProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, func
                         res.status(500).json({ message: 'Failed to updated image' });
                     });
                 }
-                // saat update image_detail harus berikan juga req.body.image_details[] yang lama                                
+                // saat update image_details harus berikan juga req.body.image_details[] yang lama                                
                 if (req.body.image_details) {
                     if (req.body.image_details.length > 0) {
                         product.image_details.forEach((image_detail) => {
@@ -190,8 +192,8 @@ const updateProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, func
                         fs_1.default.unlinkSync(path_1.default.resolve(__dirname, '../../' + `public/images${image_detail}`));
                     });
                 }
-                if (files.image_detail && files.image_detail.length > 0) {
-                    files.image_detail.forEach((file) => {
+                if (files.image_details && files.image_details.length > 0) {
+                    files.image_details.forEach((file) => {
                         const tmp_path = file.path;
                         const originalExt = file.originalname.split('.').pop();
                         const filename = file.filename + '.' + originalExt;
