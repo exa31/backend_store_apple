@@ -19,6 +19,7 @@ const router_5 = __importDefault(require("./app/likes/router"));
 const router_6 = __importDefault(require("./app/orders/router"));
 const router_7 = __importDefault(require("./app/invoices/router"));
 const router_8 = __importDefault(require("./app/deliveryAddress/router"));
+const router_9 = __importDefault(require("./app/dashboard/router"));
 var app = (0, express_1.default)();
 // view engine setup
 app.set('views', path_1.default.join(__dirname, '/views'));
@@ -39,6 +40,7 @@ app.use('/api', router_5.default);
 app.use('/api', router_6.default);
 app.use('/api', router_7.default);
 app.use('/api', router_8.default);
+app.use('/api', router_9.default);
 app.use('/auth', router_3.default);
 app.use('/', (req, res, next) => {
     res.render('index', { title: 'Express' });

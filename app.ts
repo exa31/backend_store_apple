@@ -14,7 +14,8 @@ import routerCarts from './app/cart/router';
 import routerLikes from './app/likes/router';
 import routerOrder from './app/orders/router';
 import routerInvoices from './app/invoices/router';
-import routerDeliveryAddresser from './app/deliveryAddress/router';
+import routerDeliveryAddresses from './app/deliveryAddress/router';
+import routerTransactions from './app/dashboard/router';
 
 interface CustomError extends Error {
   status?: number;
@@ -42,7 +43,8 @@ app.use('/api', routerCarts);
 app.use('/api', routerLikes);
 app.use('/api', routerOrder);
 app.use('/api', routerInvoices);
-app.use('/api', routerDeliveryAddresser);
+app.use('/api', routerDeliveryAddresses);
+app.use('/api', routerTransactions);
 app.use('/auth', routerUsers);
 
 app.use('/', (req: Request, res: Response, next: NextFunction) => {

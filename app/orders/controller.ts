@@ -111,12 +111,9 @@ export const updateOrder = async (req: Request, res: Response, next: NextFunctio
             res.status(401).json({ message: 'Unauthorized' });
             return;
         }
-        const order: Order | null = await Orders.findById(req.params.id);
-        const { status_delivery } = req.body;
-        if (order) {
-            await Orders.findByIdAndUpdate(req.params.id, status_delivery, { runValidators: true });
-            res.status(200).json({ message: 'Order updated' });
-        }
+        const status_delivery = req.body.status_delivery;
+        await Orders.findByIdAndUpdate(req.params.id, { status_delivery }, { runValidators: true });
+        res.status(200).json({ message: 'Order updated' });
     } catch (error) {
         next(error);
     }

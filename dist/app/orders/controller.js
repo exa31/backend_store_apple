@@ -121,12 +121,9 @@ const updateOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             res.status(401).json({ message: 'Unauthorized' });
             return;
         }
-        const order = yield model_1.default.findById(req.params.id);
-        const { status_delivery } = req.body;
-        if (order) {
-            yield model_1.default.findByIdAndUpdate(req.params.id, status_delivery, { runValidators: true });
-            res.status(200).json({ message: 'Order updated' });
-        }
+        const status_delivery = req.body.status_delivery;
+        yield model_1.default.findByIdAndUpdate(req.params.id, { status_delivery }, { runValidators: true });
+        res.status(200).json({ message: 'Order updated' });
     }
     catch (error) {
         next(error);
